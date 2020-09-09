@@ -1,56 +1,84 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, View, FlatList} from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity, FlatList} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import AddToDo from './components/AddToDo';
-import Header from './components/header';
-import {ToDoItem} from './components/ToDoItem';
+import Colors from './components/Colors';
+import tempData from './tempData';
+import ToDoList from './components/ToDoList';
 
-const Main = () => {
-  const [list, setlist] = useState([]);
-
-  const submitHandler = text => {
-    let newToDo = [...list];
-    newToDo.push({myEntry: text});
-    setlist(newToDo);
-  };
-
-  const pressHandler = item => {
-    let newList = [...list];
-    item.isDone = item.isDone === 0 ? 1 : 0;
-    console.log(item);
-    setlist(newList);
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <Header />
-      <View style={styles.content}>
-        <AddToDo submitHandler={submitHandler} />
-        <View style={styles.list}>
-          <FlatList
-            keyExtractor={(item, index) => index.toString()}
-            data={list}
-            renderItem={({item}) => (
-              <ToDoItem Item={item} pressHandler={pressHandler} />
-            )}
-          />
+export default class Main extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.divider} />
+          <Text style={styles.title}>
+            Todo <Text style={{ fontWeight: "300", color: Colors.blue }}>Lists</Text>
+          </Text>
+          <View style={styles.divider} />
         </View>
+
+        <View style={{ marginVertical: 48 }}>
+
+          <TouchableOpacity 
+            style={styles.addList} 
+          >
+            <Icon name="plus" size={16} color={Colors.blue} />
+          </TouchableOpacity>
+
+          <Text style={styles.add}>Add List</Text>
+
+        </View>
+
+        <View style={{ height: 275, paddingLeft: 32 }}>
+
+          <FlatList 
+            data={tempData}
+            keyExtractor={item => item.name}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={ ({ item }) => <ToDoList list={item} />}
+          />
+
+        </View>
+
       </View>
-    </SafeAreaView>
-  );
-};
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: "center",
+    justifyContent:  "center",
   },
-  content: {
-    padding: 40,
+  divider: {
+    backgroundColor: Colors.lightBlue,
+    height: 1,
+    flex: 1,
+    alignSelf: "center",
   },
-  list: {
-    marginTop: 20,
+  title: {
+    fontSize: 38,
+    fontWeight: "800",
+    color: Colors.black,
+    paddingHorizontal: 64,
   },
+  addList: {
+    borderWidth: 2,
+    padding: 16,
+    borderColor: Colors.lightBlue,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent :"center",
+  },
+  add: {
+    color: Colors.blue,
+    fontWeight: "600",
+    fontSize: 14,
+    marginTop: 8,
+  }
 });
 
-export default Main;
