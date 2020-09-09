@@ -1,14 +1,33 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, View, TouchableOpacity, FlatList} from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity, FlatList, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Colors from './components/Colors';
 import tempData from './tempData';
 import ToDoList from './components/ToDoList';
+import AddListModal from './components/AddListModal';
 
 export default class Main extends React.Component {
+
+  state = {
+    addTodoVisible: false
+  }
+
+  toggleAddTodoModal() {
+    this.setState({ addTodoVisible: !this.state.addTodoVisible })
+  }
+
   render() {
     return (
+      <>
+      <Modal 
+        animationType="slide" 
+        visible={this.state.addTodoVisible}
+        onRequestClose={() => this.toggleAddTodoModal()}
+      >
+        <AddListModal closeModal={() => this.toggleAddTodoModal()} />
+      </Modal>
+
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.divider} />
@@ -22,6 +41,7 @@ export default class Main extends React.Component {
 
           <TouchableOpacity 
             style={styles.addList} 
+            onPress={() => this.toggleAddTodoModal()}
           >
             <Icon name="plus" size={16} color={Colors.blue} />
           </TouchableOpacity>
@@ -43,6 +63,7 @@ export default class Main extends React.Component {
         </View>
 
       </View>
+      </>
     )
   }
 }
